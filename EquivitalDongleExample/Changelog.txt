@@ -1,0 +1,3 @@
+2025-01-31
+Install Npgsql 4.0.17 (.net4.5)
+Clean and rebuild solution
