@@ -1,2 +1,17 @@
 .vs/
 packages
+EquivitalDongleExample/.env
+lib
+bin
+obj
+*.txt
+*.sql
+EquivitalDongleExample/bin/**
+EquivitalDongleExample/obj/**
+EquivitalDongleExample/Properties/**
+EquivitalDongleExample/packages
+EquivitalDongleExample/*.dll
+EquivitalDongleExample/*.dll
+.DS_Store
+.vs/**/**
+EquivitalDongleExample/**.pdf

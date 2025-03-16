@@ -1,113 +1,143 @@
--- Table for sessions (to link all data tables via session_id)
+-- Table for sessions (links all data tables via round_id)
 CREATE TABLE sessions (
-    session_id TEXT PRIMARY KEY,         -- Unique identifier for the session
-    player_name TEXT,                    -- Player or user name
-    start_time TIMESTAMP NOT NULL,       -- Session start time
-    end_time TIMESTAMP                   -- Session end time
+    session_id TEXT PRIMARY KEY,
+    player_id TEXT,                    
+    start_time DOUBLE PRECISION NOT NULL, 
+    end_time DOUBLE PRECISION
+);
+
+-- Table for rounds
+CREATE TABLE rounds (
+    round_id TEXT PRIMARY KEY,
+    player_id TEXT,
+    start_time DOUBLE PRECISION NOT NULL,
+    end_time DOUBLE PRECISION
 );
 
 -- Table for ECG data
 CREATE TABLE ecg_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,    -- Timestamp for ECG datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    lead_one_raw SMALLINT,               -- Raw Lead One data
-    lead_two_raw SMALLINT,               -- Raw Lead Two data
-    sequence_number SMALLINT,            -- Sequence number
-    lead_one_mv DOUBLE PRECISION,        -- Voltage for Lead One (mV)
-    lead_two_mv DOUBLE PRECISION,        -- Voltage for Lead Two (mV)
-    CONSTRAINT fk_session_ecg FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,   
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    lead_one_raw SMALLINT,
+    lead_two_raw SMALLINT,
+    sequence_number SMALLINT,
+    lead_one_mv DOUBLE PRECISION,
+    lead_two_mv DOUBLE PRECISION,
+    CONSTRAINT fk_round_ecg FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for Heart Rate data
 CREATE TABLE heart_rate_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,     -- Timestamp for the heart rate datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    hr_bpm DOUBLE PRECISION,             -- Heart rate in beats per minute
-    CONSTRAINT fk_session_hr FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,    
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    hr_bpm DOUBLE PRECISION,
+    CONSTRAINT fk_round_hr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for Accelerometer data
 CREATE TABLE accelerometer_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,     -- Timestamp for accelerometer datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    vertical_mg DOUBLE PRECISION,        -- Vertical acceleration in mG
-    lateral_mg DOUBLE PRECISION,         -- Lateral acceleration in mG
-    longitudinal_mg DOUBLE PRECISION,    -- Longitudinal acceleration in mG
-    resultant_mg DOUBLE PRECISION,       -- Resultant acceleration in mG
-    vertical_raw SMALLINT,               -- Raw vertical data
-    lateral_raw SMALLINT,                -- Raw lateral data
-    longitudinal_raw SMALLINT,           -- Raw longitudinal data
-    CONSTRAINT fk_session_accel FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,    
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    vertical_mg DOUBLE PRECISION,
+    lateral_mg DOUBLE PRECISION,
+    longitudinal_mg DOUBLE PRECISION,
+    resultant_mg DOUBLE PRECISION,
+    vertical_raw SMALLINT,
+    lateral_raw SMALLINT,
+    longitudinal_raw SMALLINT,
+    CONSTRAINT fk_round_accel FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for Respiration Rate data
 CREATE TABLE respiration_rate_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,     -- Timestamp for respiration datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    breaths_per_minute DOUBLE PRECISION, -- Respiration rate (breaths per minute)
-    CONSTRAINT fk_session_rr FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,   
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    round_id TEXT NOT NULL,
+    breaths_per_minute DOUBLE PRECISION,
+    CONSTRAINT fk_round_rr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for Impedance Respiration data
 CREATE TABLE impedance_respiration_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,     -- Timestamp for impedance datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    impedance SMALLINT,                  -- Impedance value
-    CONSTRAINT fk_session_ir FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,    
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    impedance SMALLINT,
+    CONSTRAINT fk_round_ir FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for Skin Temperature data
 CREATE TABLE skin_temperature_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,     -- Timestamp for temperature datapoint
-    session_id TEXT NOT NULL,            -- Session ID (foreign key)
-    temperature_deg DOUBLE PRECISION,    -- Skin temperature in degrees
-    CONSTRAINT fk_session_temp FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,    
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    temperature_deg DOUBLE PRECISION,
+    CONSTRAINT fk_round_temp FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
 -- Table for GSR data
 CREATE TABLE gsr_data (
-    id SERIAL PRIMARY KEY,               -- Unique identifier
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(), -- Record creation time
-    session_time TIMESTAMP NOT NULL,          -- Timestamp for GSR datapoint
-    session_id TEXT NOT NULL,                 -- Session ID (foreign key)
-    raw_adc_reading SMALLINT,                 -- Raw ADC reading data
-    micro_siemens_reading DOUBLE PRECISION,   -- Gets the reading in 100th of microSiemens (i.e. 10-8 Siemens)
-    CONSTRAINT fk_session_gsr FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
+    event_time DOUBLE PRECISION NOT NULL,    
+    unix_timestamp DOUBLE PRECISION NOT NULL,  
+    lsl_timestamp DOUBLE PRECISION NOT NULL,
+    round_id TEXT NOT NULL,
+    raw_adc_reading SMALLINT,
+    micro_siemens_reading DOUBLE PRECISION,
+    CONSTRAINT fk_round_gsr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
 
--- Indexes
 
-CREATE UNIQUE INDEX idx_session_id ON sessions (session_id);
+-- Unique index for rounds
+CREATE UNIQUE INDEX idx_round_id ON rounds (round_id);
 
-CREATE INDEX idx_ecg_session_id ON ecg_data (session_id);
-CREATE INDEX idx_ecg_session_time ON ecg_data (session_time);
+-- Indexes for ECG data
+CREATE INDEX idx_ecg_round_id ON ecg_data (round_id);
+CREATE INDEX idx_ecg_event_time ON ecg_data (event_time);
 
-CREATE INDEX idx_heart_rate_session_id ON heart_rate_data (session_id);
-CREATE INDEX idx_heart_rate_session_time ON heart_rate_data (session_time);
+-- Indexes for Heart Rate data
+CREATE INDEX idx_heart_rate_round_id ON heart_rate_data (round_id);
+CREATE INDEX idx_heart_rate_event_time ON heart_rate_data (event_time);
 
-CREATE INDEX idx_accel_session_id ON accelerometer_data (session_id);
-CREATE INDEX idx_accel_session_time ON accelerometer_data (session_time);
+-- Indexes for Accelerometer data
+CREATE INDEX idx_accel_round_id ON accelerometer_data (round_id);
+CREATE INDEX idx_accel_event_time ON accelerometer_data (event_time);
 
-CREATE INDEX idx_respiration_session_id ON respiration_rate_data (session_id);
-CREATE INDEX idx_respiration_session_time ON respiration_rate_data (session_time);
+-- Indexes for Respiration Rate data
+CREATE INDEX idx_respiration_round_id ON respiration_rate_data (round_id);
+CREATE INDEX idx_respiration_event_time ON respiration_rate_data (event_time);
 
-CREATE INDEX idx_impedance_session_id ON impedance_respiration_data (session_id);
-CREATE INDEX idx_impedance_session_time ON impedance_respiration_data (session_time);
+-- Indexes for Impedance Respiration data
+CREATE INDEX idx_impedance_round_id ON impedance_respiration_data (round_id);
+CREATE INDEX idx_impedance_event_time ON impedance_respiration_data (event_time);
 
-CREATE INDEX idx_skin_temp_session_id ON skin_temperature_data (session_id);
-CREATE INDEX idx_skin_temp_session_time ON skin_temperature_data (session_time);
+-- Indexes for Skin Temperature data
+CREATE INDEX idx_skin_temp_round_id ON skin_temperature_data (round_id);
+CREATE INDEX idx_skin_temp_event_time ON skin_temperature_data (event_time);
 
-CREATE INDEX idx_gsr_session_id ON gsr_data (session_id);
-CREATE INDEX idx_gsr_session_time ON gsr_data (session_time);
+-- Indexes for GSR data
+CREATE INDEX idx_gsr_round_id ON gsr_data (round_id);
+CREATE INDEX idx_gsr_event_time ON gsr_data (event_time);
+    

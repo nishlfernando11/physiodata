@@ -91,12 +91,15 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="DatabaseManager.cs" />
+    <Compile Include="EquivitalService.cs" />
     <Compile Include="LSLWrapper.cs" />
+    <Compile Include="OvercookedTrigger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Changelog.txt" />
+    <Content Include="config.txt" />
     <Content Include="lsl.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

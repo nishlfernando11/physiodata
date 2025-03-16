@@ -38,8 +38,8 @@ namespace ECGDataStream
                 conString = Environment.GetEnvironmentVariable("DB_CONN_STRING");
 
                 // Connection string to local PostgreSQL
-            
-                _connectionString = "Host=localhost;Port=5432;Username=postgres;Password=admin@123;Database=experiments";
+
+                _connectionString = conString.ToString();
             }
             catch (Exception ex)
             {
@@ -96,6 +96,113 @@ namespace ECGDataStream
                 }
             }
         }
+
+
+        //public void UpdateData(string tableName, object data, string whereCondition)
+        //{
+        //    using (var conn = new NpgsqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+
+        //        // Serialize object to JSON and parse it
+        //        string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+        //        var jsonObject = JObject.Parse(jsonData);
+
+        //        // Extract keys (column names) and values
+        //        var columns = jsonObject.Properties().Select(p => p.Name).ToList();
+        //        var setClauses = columns.Select(c => $"{c} = @{c}").ToList();
+
+        //        // Build the query
+        //        string setClause = string.Join(", ", setClauses);
+        //        string query = $"UPDATE {tableName} SET {setClause} WHERE {whereCondition}";
+
+        //        using (var cmd = new NpgsqlCommand(query, conn))
+        //        {
+        //            // Bind values to parameters
+        //            foreach (var property in jsonObject.Properties())
+        //            {
+        //                object value;
+
+        //                if (property.Value.Type == JTokenType.Array) // Handle arrays/lists
+        //                {
+        //                    value = property.Value.ToObject<object[]>();
+        //                }
+        //                else if (property.Value.Type == JTokenType.Null) // Handle null values
+        //                {
+        //                    value = DBNull.Value;
+        //                }
+        //                else
+        //                {
+        //                    value = property.Value.ToObject<object>();
+        //                }
+
+        //                cmd.Parameters.AddWithValue($"@{property.Name}", value);
+        //            }
+
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
+
+        public void UpdateData(string tableName, object data, Dictionary<string, object> whereConditions)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                // Serialize object to JSON and parse it
+                string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+                var jsonObject = JObject.Parse(jsonData);
+
+                // Extract keys (column names) and values
+                var columns = jsonObject.Properties().Select(p => p.Name).ToList();
+                var setClauses = columns.Select(c => $"{c} = @{c}").ToList();
+
+                // Construct the WHERE clause dynamically
+                var whereClauses = whereConditions.Keys.Select(k => $"{k} = @{k}").ToList();
+
+                // Build the query
+                string setClause = string.Join(", ", setClauses);
+                string whereClause = string.Join(" AND ", whereClauses);
+                string query = $"UPDATE {tableName} SET {setClause} WHERE {whereClause}";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    // Bind values to parameters
+                    foreach (var property in jsonObject.Properties())
+                    {
+                        object value;
+
+                        if (property.Value.Type == JTokenType.Array) // Handle arrays/lists
+                        {
+                            value = property.Value.ToObject<object[]>();
+                        }
+                        else if (property.Value.Type == JTokenType.Null) // Handle null values
+                        {
+                            value = DBNull.Value;
+                        }
+                        else
+                        {
+                            value = property.Value.ToObject<object>();
+                        }
+
+                        cmd.Parameters.AddWithValue($"@{property.Name}", value);
+                    }
+
+                    // Bind WHERE condition values
+                    foreach (var condition in whereConditions)
+                    {
+                        object value = condition.Value ?? DBNull.Value;
+                        cmd.Parameters.AddWithValue($"@{condition.Key}", value);
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
 
     }
 }
