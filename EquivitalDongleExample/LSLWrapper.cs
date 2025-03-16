@@ -60,6 +60,8 @@ namespace ECGDataStream
             //0: float32(32 - bit floating - point numbers) — Most commonly used for sensor data like ECG, HR, etc.
             //1: int32(32 - bit integers)
             //2: double(64 - bit floating - point numbers)
+            //3: string
+
 
             string source_id = "Equivital";
 
@@ -76,6 +78,8 @@ namespace ECGDataStream
             //0: float32(32 - bit floating - point numbers) — Most commonly used for sensor data like ECG, HR, etc.
             //1: int32(32 - bit integers)
             //2: double(64 - bit floating - point numbers)
+            //3: string
+
 
             string source_id = "Equivital";
 
@@ -131,6 +135,8 @@ namespace ECGDataStream
             //0: float32(32 - bit floating - point numbers) — Most commonly used for sensor data like ECG, HR, etc.
             //1: int32(32 - bit integers)
             //2: double(64 - bit floating - point numbers)
+            //3: string
+
 
             string source_id = "Equivital";
 
@@ -148,6 +154,8 @@ namespace ECGDataStream
             //0: float32(32 - bit floating - point numbers) — Most commonly used for sensor data like ECG, HR, etc.
             //1: int32(32 - bit integers)
             //2: double(64 - bit floating - point numbers)
+            //3: string
+
 
             string source_id = "Equivital";
 
@@ -165,6 +173,8 @@ namespace ECGDataStream
             //0: float32(32 - bit floating - point numbers) — Most commonly used for sensor data like ECG, HR, etc.
             //1: int32(32 - bit integers)
             //2: double(64 - bit floating - point numbers)
+            //3: string
+
 
             string source_id = "Equivital";
 
@@ -191,16 +201,6 @@ namespace ECGDataStream
         // Function to push samples with correct timestamp
         public void PushSampleWithTimestamp(IntPtr outlet, double[] sample, double timestamp)
         {
-            // Get the timestamp relative to the stream start time
-            //double timestamp = (DateTime.UtcNow - DateTimeOffset.).TotalSeconds;
-            // Override timestamp logic (e.g., current UTC time)
-            //DateTime customTimestamp = DateTime.UtcNow;
-            //double timestamp = (customTimestamp - DateTime.UnixEpoch).TotalSeconds;
-           
-            // Get accurate Unix timestamp in seconds
-            //double timestamp = lsl_local_clock();  // LSL’s high-precision timestamp
-
-            //double timestamp = GetUnixTimestampNow();
 
             // Optionally, you can include logic to push sample at specific intervals
             Console.WriteLine($"Pushing sample at timestamp: {timestamp}");
@@ -211,16 +211,6 @@ namespace ECGDataStream
 
         public void PushSerializedSampleWithTimestamp(IntPtr outlet, string sample, double timestamp)
         {
-            // Get the timestamp relative to the stream start time
-            //double timestamp = (DateTime.UtcNow - DateTimeOffset.).TotalSeconds;
-            // Override timestamp logic (e.g., current UTC time)
-            //DateTime customTimestamp = DateTime.UtcNow;
-            //double timestamp = (customTimestamp - DateTime.UnixEpoch).TotalSeconds;
-
-            // Get accurate Unix timestamp in seconds
-            //double timestamp = lsl_local_clock();  // LSL’s high-precision timestamp
-
-            //double timestamp = GetUnixTimestampNow();
 
             // Optionally, you can include logic to push sample at specific intervals
             Console.WriteLine($"Pushing Json string sample {sample} at timestamp: {timestamp}");

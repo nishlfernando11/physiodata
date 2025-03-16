@@ -38,17 +38,13 @@ namespace ECGDataStream
                 conString = Environment.GetEnvironmentVariable("DB_CONN_STRING");
 
                 // Connection string to local PostgreSQL
-
-                _connectionString = conString.ToString();
+                                _connectionString = conString.ToString();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading .env file: {ex.Message}");
             }
         }
-
-        // Log for debugging
-
 
         public void InsertData(string tableName, object data)
         {
@@ -96,54 +92,7 @@ namespace ECGDataStream
                 }
             }
         }
-
-
-        //public void UpdateData(string tableName, object data, string whereCondition)
-        //{
-        //    using (var conn = new NpgsqlConnection(_connectionString))
-        //    {
-        //        conn.Open();
-
-        //        // Serialize object to JSON and parse it
-        //        string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-        //        var jsonObject = JObject.Parse(jsonData);
-
-        //        // Extract keys (column names) and values
-        //        var columns = jsonObject.Properties().Select(p => p.Name).ToList();
-        //        var setClauses = columns.Select(c => $"{c} = @{c}").ToList();
-
-        //        // Build the query
-        //        string setClause = string.Join(", ", setClauses);
-        //        string query = $"UPDATE {tableName} SET {setClause} WHERE {whereCondition}";
-
-        //        using (var cmd = new NpgsqlCommand(query, conn))
-        //        {
-        //            // Bind values to parameters
-        //            foreach (var property in jsonObject.Properties())
-        //            {
-        //                object value;
-
-        //                if (property.Value.Type == JTokenType.Array) // Handle arrays/lists
-        //                {
-        //                    value = property.Value.ToObject<object[]>();
-        //                }
-        //                else if (property.Value.Type == JTokenType.Null) // Handle null values
-        //                {
-        //                    value = DBNull.Value;
-        //                }
-        //                else
-        //                {
-        //                    value = property.Value.ToObject<object>();
-        //                }
-
-        //                cmd.Parameters.AddWithValue($"@{property.Name}", value);
-        //            }
-
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
+       
         public void UpdateData(string tableName, object data, Dictionary<string, object> whereConditions)
         {
             using (var conn = new NpgsqlConnection(_connectionString))
@@ -200,9 +149,6 @@ namespace ECGDataStream
                 }
             }
         }
-
-
-
 
     }
 }

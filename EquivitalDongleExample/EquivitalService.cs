@@ -149,19 +149,7 @@ namespace ECGDataStream
                 sensorInfo.PinCode = _pinCode;
                 _manager.AddBluetoothConnectableDevice(sensorInfo);
             }
-            //do
-            //{
-            //    int indexTonnectTo = 0;
-
-            //    userInput = Console.ReadLine().ToLowerInvariant();
-
-            //    if (_foundSensors.Count > indexTonnectTo && indexTonnectTo >= 0)
-            //    {
-            //        EquivitalBluetoothSensorInfo sensorInfo = _foundSensors[indexTonnectTo];
-            //        sensorInfo.PinCode = _pinCode;
-            //        _manager.AddBluetoothConnectableDevice(sensorInfo);
-            //    }
-            //} while (userInput != "q");
+            
         }
 
         private void StopEdnService()
@@ -215,7 +203,6 @@ namespace ECGDataStream
                 //Thread ecgThread = new Thread(device.Start(semConnection));
                 //ecgThread.Start();
 
-                //DeviceStartDataCollection;
             }
         }
 
@@ -373,7 +360,6 @@ namespace ECGDataStream
         public void DeviceSynchronisationTimerDataReceived(object sender, SyncrhonisationTimerEventArgs e)
         {
             double roundTime = correctedEventTime(e.SessionTime); // Assuming e.SessionTime is a DateTime with 1970 default
-                                                                  //DateTime currentDateWithRoundTime = DateTime.Today.Add(roundTime.TimeOfDay);
 
             DateTime roundStartTime = DateTime.UtcNow; // Actual round start time
             Console.WriteLine(e.SessionTime);
@@ -402,12 +388,8 @@ namespace ECGDataStream
             Console.WriteLine(e);
             Console.WriteLine(heartRateData);
 
-            //double[] lslData = ConvertObjectToDoubleArray(heartRateData);
-            // Now push to LSL outlet (No need to assign the return value, as PushSample() is void)
             Console.WriteLine("lsls data hr: ", heartRateData);
 
-            //this._lsl.PushSample(hrOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(hrOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(heartRateData);
             Console.WriteLine(jsonData);
@@ -440,10 +422,6 @@ namespace ECGDataStream
             Console.WriteLine(ECGData);
 
             SaveData("ECGData", ECGData);
-            //double[] lslData = ConvertObjectToDoubleArray(ECGData);
-
-            //this._lsl.PushSample(ecgOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(ecgOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(ECGData);
             Console.WriteLine(jsonData);
@@ -476,11 +454,6 @@ namespace ECGDataStream
             Console.WriteLine(accelerometerData);
 
             SaveData("AccelerometerData", accelerometerData);
-            //double[] lslData = ConvertObjectToDoubleArray(accelerometerData);
-
-
-            //this._lsl.PushSample(accelerometerOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(accelerometerOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(accelerometerData);
             Console.WriteLine(jsonData);
@@ -505,10 +478,6 @@ namespace ECGDataStream
             Console.WriteLine(respirationRateData);
 
             SaveData("RespirationRateData", respirationRateData);
-            //double[] lslData = ConvertObjectToDoubleArray(respirationRateData);
-
-            //this._lsl.PushSample(respirationRateOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(respirationRateOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(respirationRateData);
             Console.WriteLine(jsonData);
@@ -535,10 +504,6 @@ namespace ECGDataStream
             Console.WriteLine(impedanceRespirationData);
 
             SaveData("ImpedanceRespirationData", impedanceRespirationData);
-            //double[] lslData = ConvertObjectToDoubleArray(impedanceRespirationData);
-
-            //this._lsl.PushSample(impedanceRespirationOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(impedanceRespirationOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(impedanceRespirationData);
             Console.WriteLine(jsonData);
@@ -564,10 +529,6 @@ namespace ECGDataStream
             Console.WriteLine(skinTemperatureData);
 
             SaveData("SkinTemperatureData", skinTemperatureData);
-            //double[] lslData = ConvertObjectToDoubleArray(skinTemperatureData);
-
-            //this._lsl.PushSample(skinTemperatureOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(skinTemperatureOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(skinTemperatureData);
             Console.WriteLine(jsonData);
@@ -593,10 +554,6 @@ namespace ECGDataStream
             Console.WriteLine(gsrData);
 
             SaveData("GSRData", gsrData);
-            //double[] lslData = ConvertObjectToDoubleArray(gsrData);
-
-            //this._lsl.PushSample(gsrOutlet, lslData);
-            //this._lsl.PushSampleWithTimestamp(gsrOutlet, lslData, lslCorrectedTimestamp);
 
             string jsonData = JsonConvert.SerializeObject(gsrData);
             Console.WriteLine(jsonData);
@@ -699,16 +656,7 @@ namespace ECGDataStream
 
             return customRoundId;
         }
-
-
-        //public static double ConvertTimeToDouble(DateTime time)
-        //{
-        //    DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        //    TimeSpan timeSpan = time - unixEpoch;
-        //    double timestamp = timeSpan.TotalSeconds;
-        //    return timestamp;
-        //}
+               
 
         // Example of converting DateTime to a double (could be epoch time or any other conversion)
         public static double ConvertTimeToDouble(DateTime time)
