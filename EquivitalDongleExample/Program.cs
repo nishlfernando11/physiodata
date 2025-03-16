@@ -29,7 +29,6 @@ namespace ECGDataStream
 
         private readonly DatabaseManager _dbManager;
         private readonly LSLWrapper _lsl;
-        //public double roundId;
         public string roundId;
 
         public Program()

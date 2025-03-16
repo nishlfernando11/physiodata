@@ -94,7 +94,7 @@ namespace ECGDataStream
                 Console.WriteLine("Waiting for a dongle to connect...");
                 while (_manager.ConnectedIWrapDeviceCount == 0)
                 {
-                    Console.WriteLine("Connect an Equivital Dongle and press enter. Enter again if unsuccesfull.");
+                    Console.WriteLine("Connect an Equivital Dongle and press enter. Enter again if unsuccessful.");
 
                     if (Console.ReadLine().ToLowerInvariant() == "q")
                     {
@@ -213,7 +213,7 @@ namespace ECGDataStream
             Console.Write("Enter Player ID: ");
             string playerID = Console.ReadLine();
 
-            string NewRoundID = GenerateCustomRoundId(roundID);
+            string NewRoundID = GenerateCustomRoundId(roundID, playerID);
             this.roundId = NewRoundID; // Assign new Round ID
 
             Console.WriteLine($"Custom Round ID: {NewRoundID}");
@@ -259,7 +259,7 @@ namespace ECGDataStream
             _isCollecting = false;
             // End round
             this.updateRound(this.roundId);
-            Console.WriteLine("Round ended, end time updated.");
+            Console.WriteLine("\n\nRound ended, end time updated.\n\n");
 
         }
 
@@ -639,7 +639,7 @@ namespace ECGDataStream
             return timestamp;
         }
 
-        public static string GenerateCustomRoundId(string userRoundId)
+        public static string GenerateCustomRoundId(string userRoundId, string playerID)
         {
             // Validate the input round ID (e.g., ensure it's not null/empty)
             if (string.IsNullOrWhiteSpace(userRoundId))
@@ -652,7 +652,7 @@ namespace ECGDataStream
 
 
             // Combine the user-provided round ID and timestamp
-            string customRoundId = $"{userRoundId}{timestamp}";
+            string customRoundId = $"{playerID}-{userRoundId}-{timestamp}";
 
             return customRoundId;
         }
