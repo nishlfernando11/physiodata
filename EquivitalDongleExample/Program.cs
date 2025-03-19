@@ -35,6 +35,7 @@ namespace ECGDataStream
         {
             _dbManager = new DatabaseManager();
             _lsl = new LSLWrapper();
+            roundId = null;
 
             //Environment.SetEnvironmentVariable("LSL_ALLOW_REMOTE", "1", EnvironmentVariableTarget.Process);
             //Environment.SetEnvironmentVariable("LSL_LISTEN_ADDRESS", "192.168.1.103", EnvironmentVariableTarget.Process);
@@ -61,20 +62,28 @@ namespace ECGDataStream
             EquivitalService equivitalService = new EquivitalService(devName, licenseKey, pinCode);
 
             OvercookedTrigger overcookedTrigger = new OvercookedTrigger(equivitalService);
+            
+            DataService dataService = new DataService(equivitalService);
+
 
             // Start monitoring in a separate thread
             Thread triggerThread = new Thread(overcookedTrigger.ListenForKeyPress);
             triggerThread.Start();
 
 
+            // Phase 1: Initialize the Dongle (one-time)
             // Start the Equivital Dongle Manager
             equivitalService.StartDongleManager();
 
-            Console.WriteLine("Listening for Overcooked UI trigger... (Press 'S' to start round, 'X' to stop round)");
+
+            // Phase 2: Listen for Triggers (multiple sessions)
+            dataService.StartListening();
+
+            //Console.WriteLine("Listening for Overcooked UI trigger... (Press 'S' to start round, 'X' to stop round)");
+            Console.WriteLine("Listening for Overcooked UI trigger...");
             Console.WriteLine("Press 'q' to exit...");
 
             Console.ReadKey();
-
 
             try
             {

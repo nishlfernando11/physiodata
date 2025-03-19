@@ -256,6 +256,7 @@ namespace ECGDataStream
             Console.WriteLine("Stopping ECG Data Collection...");
             device.Stop(true);
 
+            //StopDongleManager();
             _isCollecting = false;
             // End round
             this.updateRound(this.roundId);
