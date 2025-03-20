@@ -189,12 +189,12 @@ namespace ECGDataStream
             }
         }
 
-        public void StartDataCollection()
+        public void StartDataCollection(string roundID, string playerID)
         {
             if (!_isCollecting)
             {
                 Console.WriteLine("Adding player round data");
-                AddPlayer();
+                AddPlayer(roundID, playerID);
                 Console.WriteLine("Starting ECG Data Collection...");
                 _isCollecting = true;
                 device.Start(semConnection);
@@ -206,12 +206,15 @@ namespace ECGDataStream
             }
         }
 
-        public void AddPlayer()
+        public void AddPlayer(string roundID, string playerID)
         {
-            Console.Write("Enter Round ID: ");
-            string roundID = Console.ReadLine();
-            Console.Write("Enter Player ID: ");
-            string playerID = Console.ReadLine();
+            //Console.WriteLine($" data: {data}");
+
+            //Console.Write("Enter Round ID: ");
+            //string roundID = "1"; // Console.ReadLine();
+            //Console.Write("Enter Player ID: ");
+            //string playerID = "1"; // Console.ReadLine();
+            //Console.WriteLine($" data: {roundID} {playerID}");
 
             string NewRoundID = GenerateCustomRoundId(roundID, playerID);
             this.roundId = NewRoundID; // Assign new Round ID
@@ -386,14 +389,14 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(heartRateData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(heartRateData);
 
-            Console.WriteLine("lsls data hr: ", heartRateData);
+            //Console.WriteLine("lsls data hr: ", heartRateData);
 
 
             string jsonData = JsonConvert.SerializeObject(heartRateData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(hrOutlet, jsonData, lslCorrectedTimestamp);
 
             SaveData("HeartRateData", heartRateData);
@@ -419,13 +422,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(ECGData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(ECGData);
 
             SaveData("ECGData", ECGData);
 
             string jsonData = JsonConvert.SerializeObject(ECGData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(ecgOutlet, jsonData, lslCorrectedTimestamp);
 
         }
@@ -451,13 +454,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(accelerometerData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(accelerometerData);
 
             SaveData("AccelerometerData", accelerometerData);
 
             string jsonData = JsonConvert.SerializeObject(accelerometerData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(accelerometerOutlet, jsonData, lslCorrectedTimestamp);
         }
 
@@ -475,13 +478,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(respirationRateData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(respirationRateData);
 
             SaveData("RespirationRateData", respirationRateData);
 
             string jsonData = JsonConvert.SerializeObject(respirationRateData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(respirationRateOutlet, jsonData, lslCorrectedTimestamp);
 
         }
@@ -501,13 +504,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(impedanceRespirationData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(impedanceRespirationData);
 
             SaveData("ImpedanceRespirationData", impedanceRespirationData);
 
             string jsonData = JsonConvert.SerializeObject(impedanceRespirationData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(impedanceRespirationOutlet, jsonData, lslCorrectedTimestamp);
 
         }
@@ -526,13 +529,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(skinTemperatureData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(skinTemperatureData);
 
             SaveData("SkinTemperatureData", skinTemperatureData);
 
             string jsonData = JsonConvert.SerializeObject(skinTemperatureData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(skinTemperatureOutlet, jsonData, lslCorrectedTimestamp);
 
         }
@@ -551,13 +554,13 @@ namespace ECGDataStream
                 lsl_timestamp = lsl_timestamp,
                 unix_timestamp = unixTimestamp
             };
-            Console.WriteLine(e);
-            Console.WriteLine(gsrData);
+            //Console.WriteLine(e);
+            //Console.WriteLine(gsrData);
 
             SaveData("GSRData", gsrData);
 
             string jsonData = JsonConvert.SerializeObject(gsrData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
             this._lsl.PushSerializedSampleWithTimestamp(skinTemperatureOutlet, jsonData, lslCorrectedTimestamp);
 
         }

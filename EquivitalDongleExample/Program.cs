@@ -37,11 +37,6 @@ namespace ECGDataStream
             _lsl = new LSLWrapper();
             roundId = null;
 
-            //Environment.SetEnvironmentVariable("LSL_ALLOW_REMOTE", "1", EnvironmentVariableTarget.Process);
-            //Environment.SetEnvironmentVariable("LSL_LISTEN_ADDRESS", "192.168.1.103", EnvironmentVariableTarget.Process);
-
-
-
         }
 
         static void Main(string[] args)
@@ -77,7 +72,9 @@ namespace ECGDataStream
 
 
             // Phase 2: Listen for Triggers (multiple sessions)
-            dataService.StartListening();
+            Thread eventThread = new Thread(dataService.StartListening);
+            eventThread.Start();
+            //dataService.StartListening();
 
             //Console.WriteLine("Listening for Overcooked UI trigger... (Press 'S' to start round, 'X' to stop round)");
             Console.WriteLine("Listening for Overcooked UI trigger...");

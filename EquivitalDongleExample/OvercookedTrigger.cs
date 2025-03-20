@@ -23,7 +23,7 @@ public class OvercookedTrigger
             }
             else if (key == ConsoleKey.S)
             {
-                _equivitalService.StartDataCollection();
+                //_equivitalService.StartDataCollection();
             }
             else if (key == ConsoleKey.X)
             {

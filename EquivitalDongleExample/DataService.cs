@@ -4,6 +4,7 @@ using System.Data;
 using Quobject.SocketIoClientDotNet.Client;
 using Quobject.Collections.Immutable;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json.Linq;
 
 public class DataService
 {
@@ -36,52 +37,46 @@ public class DataService
         {
 
             Console.WriteLine("Connecting to Socket.IO Server...");
-            socket = IO.Socket("http://localhost:80");  // Use HTTP for Socket.IO connection
+            socket = IO.Socket(overcookedUrl);  // Use HTTP for Socket.IO connection
             //socket = IO.Socket("http://host.docker.internal");
 
-            //socket = IO.Socket("http://host.docker.internal", new IO.Options
-            //{
-            //    Reconnection = true,
-            //    AutoConnect = true,
-            //    Transports = ImmutableList.Create("websocket")
-            //});
-
-            //socket.On(Socket.EVENT_CONNECT, () =>
-            //{
-            //    Console.WriteLine("✅ Connected to Overcooked Socket.IO server.");
-            //    socket.Emit("join", "{}"); // Ensure it joins the Overcooked room
-            //});
-
-            //string[] eventNames = { "start_game", "end_game", "state_pong", "error", "disconnect", "join" };
-            //foreach (string eventName in eventNames)
-            //{
-            //    socket.On(eventName, (data) =>
-            //    {
-            //        Console.WriteLine($"🔍 Received event: {eventName} | Data: {data}");
-            //    });
-            //}
-
+        
             socket.On(Socket.EVENT_CONNECT, (data) =>
             {
                 Console.WriteLine("Connected to Overcooked Socket.IO server." + data);
             });
 
-            socket.On("start_game", (data) =>
-            {
-                Console.WriteLine("Received start_ecg event. Starting ECG collection...");
-                StartECGCollection();
-            });
-
-            socket.On("end_game", (data) =>
-            {
-                Console.WriteLine("Received stop_ecg event. Stopping ECG collection...");
-                StopECGCollection();
-            });
-
             socket.On("start_ecg", (data) =>
             {
-                Console.WriteLine("Received start_ecg event. Starting ECG collection...");
-                StartECGCollection();
+                Console.WriteLine("======Starting a new round ===============================");
+                // Parse incoming data as JObject
+                JObject json_data = JObject.Parse(data.ToString());
+
+                // Generate default values based on UTC time
+                long utctime = DateTime.UtcNow.Ticks;
+                string defaultRoundId = utctime.ToString(); // Unique timestamp-based ID
+                string defaultPlayerId = (utctime % int.MaxValue).ToString(); // Ensure it's within int range
+
+                // Extract values from the incoming data, using UTC-based defaults if missing
+                string roundId  = json_data["start_info"]?["round_id"]?.Value<string>() ?? defaultRoundId;
+                string playerId = json_data["start_info"]?["player_id"]?.Value<string>() ?? defaultPlayerId;
+
+                // Construct the JObject with extracted values
+                JObject jdata = new JObject(
+                    new JProperty("spectating", false),
+                    new JProperty("start_info", new JObject(
+                        new JProperty("round_id", roundId),
+                        new JProperty("player_id", playerId)
+                    ))
+                );
+
+
+                // Accessing nested properties using the JObject indexer
+
+                // Print the values to console
+                Console.WriteLine($"Round ID: {roundId}");
+                Console.WriteLine($"Player ID: {playerId}");
+                StartECGCollection(roundId, playerId);
             });
 
             socket.On("stop_ecg", (data) =>
@@ -95,10 +90,10 @@ public class DataService
                 Console.WriteLine("Disconnected from Socket.IO server.");
             });
 
-            socket.On(Socket.EVENT_MESSAGE, (data) =>
-            {
-                Console.WriteLine("Received event: ." + data);
-            });
+            //socket.On(Socket.EVENT_MESSAGE, (data) =>
+            //{
+            //    Console.WriteLine("Received event: ." + data);
+            //});
 
 
         }
@@ -109,26 +104,26 @@ public class DataService
 
     }
 
-    private void HandleTrigger(string eventData)
-    {
-        if (eventData.Contains("start_ecg") && !_isStreaming)
-        {
-            Console.WriteLine("Received start_ecg. Beginning ECG data collection...");
-            StartECGCollection();
-        }
-        else if (eventData.Contains("stop_ecg") && _isStreaming)
-        {
-            Console.WriteLine("Received stop_ecg. Stopping ECG data collection...");
-            StopECGCollection();
-        }
-    }
+    //private void HandleTrigger(string eventData)
+    //{
+    //    if (eventData.Contains("start_ecg") && !_isStreaming)
+    //    {
+    //        Console.WriteLine("Received start_ecg. Beginning ECG data collection...");
+    //        StartECGCollection(eventData);
+    //    }
+    //    else if (eventData.Contains("stop_ecg") && _isStreaming)
+    //    {
+    //        Console.WriteLine("Received stop_ecg. Stopping ECG data collection...");
+    //        StopECGCollection();
+    //    }
+    //}
 
-    private void StartECGCollection()
+    private void StartECGCollection(string roundID, string playerID)
     {
         _isStreaming = true;
         // Call your Equivital data streaming function here
         Console.WriteLine("ECG Data Collection Started...");
-        _equivitalService.StartDataCollection();
+        _equivitalService.StartDataCollection(roundID, playerID);
     }
 
     private void StopECGCollection()
