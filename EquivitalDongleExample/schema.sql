@@ -1,15 +1,10 @@
 -- Table for sessions (links all data tables via round_id)
-CREATE TABLE sessions (
-    session_id TEXT PRIMARY KEY,
-    player_id TEXT,                    
-    start_time DOUBLE PRECISION NOT NULL, 
-    end_time DOUBLE PRECISION
-);
 
 -- Table for rounds
 CREATE TABLE rounds (
-    round_id TEXT PRIMARY KEY,
-    player_id TEXT,
+    id SERIAL  PRIMARY KEY,
+    player_id TEXT NOT NULL,
+    round_id TEXT NOT NULL,
     start_time DOUBLE PRECISION NOT NULL,
     end_time DOUBLE PRECISION
 );
@@ -22,6 +17,7 @@ CREATE TABLE ecg_data (
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
     round_id TEXT NOT NULL,
+    player_id TEXT NOT NULL,
     lead_one_raw SMALLINT,
     lead_two_raw SMALLINT,
     sequence_number SMALLINT,
@@ -38,6 +34,7 @@ CREATE TABLE heart_rate_data (
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
     round_id TEXT NOT NULL,
+    player_id TEXT NOT NULL,
     hr_bpm DOUBLE PRECISION,
     CONSTRAINT fk_round_hr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
 );
@@ -49,6 +46,7 @@ CREATE TABLE accelerometer_data (
     event_time DOUBLE PRECISION NOT NULL,    
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
+    player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     vertical_mg DOUBLE PRECISION,
     lateral_mg DOUBLE PRECISION,
@@ -67,6 +65,7 @@ CREATE TABLE respiration_rate_data (
     event_time DOUBLE PRECISION NOT NULL,   
     lsl_timestamp DOUBLE PRECISION NOT NULL,
     unix_timestamp DOUBLE PRECISION NOT NULL,  
+    player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     breaths_per_minute DOUBLE PRECISION,
     CONSTRAINT fk_round_rr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
@@ -79,6 +78,7 @@ CREATE TABLE impedance_respiration_data (
     event_time DOUBLE PRECISION NOT NULL,    
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
+    player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     impedance SMALLINT,
     CONSTRAINT fk_round_ir FOREIGN KEY (round_id) REFERENCES rounds (round_id)
@@ -91,6 +91,7 @@ CREATE TABLE skin_temperature_data (
     event_time DOUBLE PRECISION NOT NULL,    
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
+    player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     temperature_deg DOUBLE PRECISION,
     CONSTRAINT fk_round_temp FOREIGN KEY (round_id) REFERENCES rounds (round_id)
@@ -103,15 +104,52 @@ CREATE TABLE gsr_data (
     event_time DOUBLE PRECISION NOT NULL,    
     unix_timestamp DOUBLE PRECISION NOT NULL,  
     lsl_timestamp DOUBLE PRECISION NOT NULL,
+    player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     raw_adc_reading SMALLINT,
-    micro_siemens_reading DOUBLE PRECISION,
-    CONSTRAINT fk_round_gsr FOREIGN KEY (round_id) REFERENCES rounds (round_id)
+    micro_siemens_reading DOUBLE PRECISION
 );
 
 
+CREATE TABLE trajectories (
+    id SERIAL NOT NULL,
+    round_id TEXT NOT NULL,
+    state TEXT NOT NULL,
+    joint_action TEXT NOT NULL,
+    reward DOUBLE PRECISION NOT NULL,
+    time_left INTEGER NOT NULL,
+    score DOUBLE PRECISION NOT NULL,
+    time_elapsed DOUBLE PRECISION NOT NULL,
+    cur_gameloop DOUBLE PRECISION NOT NULL,
+    layout TEXT NOT NULL,
+    layout_name TEXT NOT NULL,
+    trial_id TEXT NOT NULL,
+    player_0_id TEXT NOT NULL,
+    player_1_id TEXT NOT NULL,
+    player_0_is_human BOOLEAN NOT NULL,
+    player_1_is_human BOOLEAN NOT NULL,
+    collision BOOLEAN NOT NULL,
+    num_collisions INTEGER NOT NULL,
+    unix_timestamp DOUBLE PRECISION NOT NULL,
+    PRIMARY KEY (id, round_id, trial_id, unix_timestamp)
+);
+
+
+CREATE TABLE records (
+    id SERIAL PRIMARY KEY,
+    uid INTEGER NOT NULL,               -- Assuming UID is auto-incrementing
+    unix_timestamp DOUBLE PRECISION NOT NULL,     -- Timestamp representing Unix timestamp (will use TO_TIMESTAMP for conversion)
+    round_id VARCHAR(255) NOT NULL,        -- Assuming round_id is a string-based identifier
+    start DOUBLE PRECISION NOT NULL,              -- Timestamp for the start time
+    stop DOUBLE PRECISION NOT NULL,               -- Timestamp for the stop time
+    CONSTRAINT valid_stop_time CHECK (stop > start)  -- Optional constraint to ensure stop time is after start time
+);
+
+CREATE INDEX idx_records_id ON records (id);
+CREATE INDEX idx_trajectories_round_id ON trajectories (round_id);
+
 -- Unique index for rounds
-CREATE UNIQUE INDEX idx_round_id ON rounds (round_id);
+CREATE UNIQUE INDEX idx_rounds_id ON rounds (id);
 
 -- Indexes for ECG data
 CREATE INDEX idx_ecg_round_id ON ecg_data (round_id);

@@ -46,6 +46,9 @@ namespace ECGDataStream
             string devName = Environment.GetEnvironmentVariable("EQ_DEV_NAME");
             string licenseKey = Environment.GetEnvironmentVariable("EQ_LICENSE_KEY");
             string pinCode = Environment.GetEnvironmentVariable("EQ_DONGLE_PIN");
+            string deviceIP = Environment.GetEnvironmentVariable("DEVICE_IP");
+            Environment.SetEnvironmentVariable("LSL_ALLOW_REMOTE", "1", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("LSL_LISTEN_ADDRESS", deviceIP, EnvironmentVariableTarget.Process); // actual Windows IP
 
             if (string.IsNullOrWhiteSpace(devName) || string.IsNullOrWhiteSpace(licenseKey))
             {

@@ -25,6 +25,7 @@ namespace ECGDataStream
         private readonly LSLWrapper _lsl;
         //public double roundId;
         public string roundId;
+        public string playerId;
         private bool _isCollecting;
         private SemDevice device;
         private ISemConnection semConnection;
@@ -216,14 +217,15 @@ namespace ECGDataStream
             //string playerID = "1"; // Console.ReadLine();
             //Console.WriteLine($" data: {roundID} {playerID}");
 
-            string NewRoundID = GenerateCustomRoundId(roundID, playerID);
-            this.roundId = NewRoundID; // Assign new Round ID
+            this.roundId = roundID; // Assign new Round ID
+            this.playerId = playerID; // Assign new Round ID
 
-            Console.WriteLine($"Custom Round ID: {NewRoundID}");
+            Console.WriteLine($"Round ID: {roundID}");
+            Console.WriteLine($"Player ID: {playerId}");
 
             var roundObj = new Dictionary<string, object>
             {
-                { "round_id", NewRoundID },
+                { "round_id", roundID },
                 { "player_id", playerID },
                 { "start_time", this._lsl.GetUnixTimestampNow() }
             };
@@ -383,6 +385,7 @@ namespace ECGDataStream
 
             object heartRateData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 hr_bpm = e.BeatsPerMinute,
                 event_time = correctedEventTime(e.SessionTime),
@@ -413,6 +416,7 @@ namespace ECGDataStream
             object ECGData = new
             {
                 round_id = this.roundId,
+                player_id = this.playerId,
                 lead_one_raw = e.LeadOneRaw,
                 lead_two_raw = e.LeadTwoRaw,
                 sequence_number = e.SequenceNumber,
@@ -442,6 +446,7 @@ namespace ECGDataStream
 
             object accelerometerData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 vertical_mg = e.Vertical_mG,
                 lateral_mg = e.Lateral_mG,
@@ -472,6 +477,7 @@ namespace ECGDataStream
 
             object respirationRateData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 breaths_per_minute = e.BreathsPerMinute,
                 event_time = correctedEventTime(e.SessionTime),
@@ -498,6 +504,7 @@ namespace ECGDataStream
 
             object impedanceRespirationData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 impedance = e.Impedance,
                 event_time = correctedEventTime(e.SessionTime),
@@ -523,6 +530,7 @@ namespace ECGDataStream
 
             object skinTemperatureData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 temperature_deg = e.TemperatureDeg,
                 event_time = correctedEventTime(e.SessionTime),
@@ -547,6 +555,7 @@ namespace ECGDataStream
 
             object gsrData = new
             {
+                player_id = this.playerId,
                 round_id = this.roundId,
                 raw_adc_reading = e.Reading,
                 micro_siemens_reading = e.Reading100MicroSiemens,

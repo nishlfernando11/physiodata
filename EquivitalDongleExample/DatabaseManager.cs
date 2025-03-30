@@ -38,7 +38,7 @@ namespace ECGDataStream
                 conString = Environment.GetEnvironmentVariable("DB_CONN_STRING");
 
                 // Connection string to local PostgreSQL
-                                _connectionString = conString.ToString();
+                _connectionString = conString.ToString();
             }
             catch (Exception ex)
             {
