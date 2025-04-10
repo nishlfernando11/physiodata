@@ -1,0 +1,72 @@
+-- Drop indexes first
+DROP INDEX IF EXISTS idx_session_id;
+DROP INDEX IF EXISTS idx_ecg_session_id;
+DROP INDEX IF EXISTS idx_ecg_session_time;
+DROP INDEX IF EXISTS idx_heart_rate_session_id;
+DROP INDEX IF EXISTS idx_heart_rate_session_time;
+DROP INDEX IF EXISTS idx_accel_session_id;
+DROP INDEX IF EXISTS idx_accel_session_time;
+DROP INDEX IF EXISTS idx_respiration_session_id;
+DROP INDEX IF EXISTS idx_respiration_session_time;
+DROP INDEX IF EXISTS idx_impedance_session_id;
+DROP INDEX IF EXISTS idx_impedance_session_time;
+DROP INDEX IF EXISTS idx_skin_temp_session_id;
+DROP INDEX IF EXISTS idx_skin_temp_session_time;
+DROP INDEX IF EXISTS idx_gsr_session_id;
+DROP INDEX IF EXISTS idx_gsr_session_time;
+
+-- Drop tables in reverse order to handle foreign key dependencies
+DROP TABLE IF EXISTS gsr_data CASCADE;
+DROP TABLE IF EXISTS skin_temperature_data CASCADE;
+DROP TABLE IF EXISTS impedance_respiration_data CASCADE;
+DROP TABLE IF EXISTS respiration_rate_data CASCADE;
+DROP TABLE IF EXISTS accelerometer_data CASCADE;
+DROP TABLE IF EXISTS heart_rate_data CASCADE;
+DROP TABLE IF EXISTS ecg_data CASCADE;
+DROP TABLE IF EXISTS sessions CASCADE;
+
+
+DO $$ 
+BEGIN
+    -- Drop indexes first
+    EXECUTE 'DROP INDEX IF EXISTS idx_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_ecg_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_ecg_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_heart_rate_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_heart_rate_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_accel_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_accel_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_respiration_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_respiration_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_impedance_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_impedance_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_skin_temp_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_skin_temp_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_gsr_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_gsr_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_records_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_trajectories_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_metrics_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_metrics_event_time';
+    EXECUTE 'DROP INDEX IF EXISTS idx_eeg_round_id';
+    EXECUTE 'DROP INDEX IF EXISTS idx_eeg_event_time';
+
+    -- Drop tables in reverse order (to handle foreign key dependencies)
+    EXECUTE 'DROP TABLE IF EXISTS gsr_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS skin_temperature_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS impedance_respiration_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS respiration_rate_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS accelerometer_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS heart_rate_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS ecg_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS rounds CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS sessions CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS records CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS trajectories CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS eeg_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS metrics_data CASCADE';
+    EXECUTE 'DROP TABLE IF EXISTS eye_tracker_data CASCADE';
+END $$;
+
+
+
