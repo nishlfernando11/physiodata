@@ -56,17 +56,20 @@ public class DataService
                 long utctime = DateTime.UtcNow.Ticks;
                 string defaultRoundId = utctime.ToString(); // Unique timestamp-based ID
                 string defaultPlayerId = (utctime % int.MaxValue).ToString(); // Ensure it's within int range
+                string defaultUId = utctime.ToString(); // Unique timestamp-based ID
 
                 // Extract values from the incoming data, using UTC-based defaults if missing
                 string roundId  = json_data["start_info"]?["round_id"]?.Value<string>() ?? defaultRoundId;
                 string playerId = json_data["start_info"]?["player_id"]?.Value<string>() ?? defaultPlayerId;
+                string uid = json_data["start_info"]?["uid"]?.Value<string>() ?? defaultUId;
 
                 // Construct the JObject with extracted values
                 JObject jdata = new JObject(
                     new JProperty("spectating", false),
                     new JProperty("start_info", new JObject(
                         new JProperty("round_id", roundId),
-                        new JProperty("player_id", playerId)
+                        new JProperty("player_id", playerId),
+                        new JProperty("uid", uid)
                     ))
                 );
 
@@ -76,7 +79,8 @@ public class DataService
                 // Print the values to console
                 Console.WriteLine($"Round ID: {roundId}");
                 Console.WriteLine($"Player ID: {playerId}");
-                StartECGCollection(roundId, playerId);
+                Console.WriteLine($"uid: {uid}");
+                StartECGCollection(roundId, playerId, uid);
             });
 
             socket.On("stop_ecg", (data) =>
@@ -118,12 +122,12 @@ public class DataService
     //    }
     //}
 
-    private void StartECGCollection(string roundID, string playerID)
+    private void StartECGCollection(string roundID, string playerID, string uid)
     {
         _isStreaming = true;
         // Call your Equivital data streaming function here
         Console.WriteLine("ECG Data Collection Started...");
-        _equivitalService.StartDataCollection(roundID, playerID);
+        _equivitalService.StartDataCollection(roundID, playerID, uid);
     }
 
     private void StopECGCollection()
