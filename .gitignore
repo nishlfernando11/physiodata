@@ -15,3 +15,4 @@ EquivitalDongleExample/*.dll
 .DS_Store
 .vs/**/**
 EquivitalDongleExample/**.pdf
+!EquivitalDongleExample/config.txt
