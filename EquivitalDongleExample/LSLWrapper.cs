@@ -213,7 +213,8 @@ namespace ECGDataStream
         {
 
             // Optionally, you can include logic to push sample at specific intervals
-            Console.WriteLine($"Pushing Json string sample {sample} at timestamp: {timestamp}");
+            //Console.WriteLine($"Pushing Json string sample {sample} at timestamp: {timestamp}");
+            //Console.WriteLine($"Pushing Json string sample at timestamp: {timestamp}");
 
             // Push the sample
             lsl_push_sample_str(outlet, new string[] { sample }, timestamp);

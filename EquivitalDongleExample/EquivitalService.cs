@@ -26,6 +26,7 @@ namespace ECGDataStream
         //public double roundId;
         public string roundId;
         public string playerId;
+        public string uid;
         private bool _isCollecting;
         private SemDevice device;
         private ISemConnection semConnection;
@@ -190,12 +191,12 @@ namespace ECGDataStream
             }
         }
 
-        public void StartDataCollection(string roundID, string playerID)
+        public void StartDataCollection(string roundID, string playerID, string uid)
         {
             if (!_isCollecting)
             {
                 Console.WriteLine("Adding player round data");
-                AddPlayer(roundID, playerID);
+                AddPlayer(roundID, playerID, uid);
                 Console.WriteLine("Starting ECG Data Collection...");
                 _isCollecting = true;
                 device.Start(semConnection);
@@ -207,26 +208,23 @@ namespace ECGDataStream
             }
         }
 
-        public void AddPlayer(string roundID, string playerID)
+        public void AddPlayer(string roundID, string playerID, string uid)
         {
-            //Console.WriteLine($" data: {data}");
-
-            //Console.Write("Enter Round ID: ");
-            //string roundID = "1"; // Console.ReadLine();
-            //Console.Write("Enter Player ID: ");
-            //string playerID = "1"; // Console.ReadLine();
-            //Console.WriteLine($" data: {roundID} {playerID}");
 
             this.roundId = roundID; // Assign new Round ID
-            this.playerId = playerID; // Assign new Round ID
+            this.playerId = playerID; // Assign new Player ID
+            this.uid = uid; // Assign new uid
 
             Console.WriteLine($"Round ID: {roundID}");
             Console.WriteLine($"Player ID: {playerId}");
+            Console.WriteLine($"uid: {uid}");
+
 
             var roundObj = new Dictionary<string, object>
             {
                 { "round_id", roundID },
                 { "player_id", playerID },
+                { "uid", uid },
                 { "start_time", this._lsl.GetUnixTimestampNow() }
             };
             this.createRound(roundObj);
@@ -315,7 +313,7 @@ namespace ECGDataStream
 
         private void DeviceConnectionRemoved(object sender, SemConnectionEventArgs e)
         {
-            Console.WriteLine("A SEM device has disconnected.");
+            Console.WriteLine("A SEM device has disconnected.\nPress 'C' to try again the connection.");
         }
 
         static List<EquivitalBluetoothSensorInfo> _foundSensors = new List<EquivitalBluetoothSensorInfo>();
@@ -386,6 +384,7 @@ namespace ECGDataStream
             object heartRateData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 hr_bpm = e.BeatsPerMinute,
                 event_time = correctedEventTime(e.SessionTime),
@@ -417,6 +416,7 @@ namespace ECGDataStream
             {
                 round_id = this.roundId,
                 player_id = this.playerId,
+                uid = this.uid,
                 lead_one_raw = e.LeadOneRaw,
                 lead_two_raw = e.LeadTwoRaw,
                 sequence_number = e.SequenceNumber,
@@ -447,6 +447,7 @@ namespace ECGDataStream
             object accelerometerData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 vertical_mg = e.Vertical_mG,
                 lateral_mg = e.Lateral_mG,
@@ -478,6 +479,7 @@ namespace ECGDataStream
             object respirationRateData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 breaths_per_minute = e.BreathsPerMinute,
                 event_time = correctedEventTime(e.SessionTime),
@@ -505,6 +507,7 @@ namespace ECGDataStream
             object impedanceRespirationData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 impedance = e.Impedance,
                 event_time = correctedEventTime(e.SessionTime),
@@ -531,6 +534,7 @@ namespace ECGDataStream
             object skinTemperatureData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 temperature_deg = e.TemperatureDeg,
                 event_time = correctedEventTime(e.SessionTime),
@@ -556,6 +560,7 @@ namespace ECGDataStream
             object gsrData = new
             {
                 player_id = this.playerId,
+                uid = this.uid,
                 round_id = this.roundId,
                 raw_adc_reading = e.Reading,
                 micro_siemens_reading = e.Reading100MicroSiemens,
@@ -576,7 +581,7 @@ namespace ECGDataStream
 
         public void DeviceRawDataReceived(object sender, SemMessageEventArgs e)
         {
-            Console.WriteLine(e);
+            //Console.WriteLine(e);
             SaveData("RawData", e);
 
 
@@ -595,7 +600,7 @@ namespace ECGDataStream
                 sw.WriteLine($"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} | {dataType}: {data}");
             }
 
-            Console.WriteLine($"Data appended to {logFilePath}");
+            //Console.WriteLine($"Data appended to {logFilePath}");
 
             string tableName = null;
 
@@ -631,7 +636,7 @@ namespace ECGDataStream
                 if (tableName != null)
                 {
                     _dbManager.InsertData(tableName, data); // Access _dbManager directly //TODO:update schema
-                    Console.WriteLine("Data saved to database successfully.");
+                    //Console.WriteLine("Data saved to database successfully.");
                 }
 
             }
@@ -643,11 +648,11 @@ namespace ECGDataStream
 
         static double correctedEventTime(DateTime roundTime)
         {
-            Console.WriteLine($"roundTime: {roundTime}");
+            //Console.WriteLine($"roundTime: {roundTime}");
             //DateTime roundStartTime = DateTime.UtcNow; // Approximate round start time
             double timestamp = (roundTime - new DateTime(1970, 1, 1)).TotalSeconds; //unix
                                                                                     //Console.WriteLine($"roundStartTime {roundStartTime}, roundTime: {roundTime}, timestamp: {timestamp}");
-            Console.WriteLine($"roundTime: {roundTime}, timestamp: {timestamp}");
+            //Console.WriteLine($"roundTime: {roundTime}, timestamp: {timestamp}");
 
             return timestamp;
         }

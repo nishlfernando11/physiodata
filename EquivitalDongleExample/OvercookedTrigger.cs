@@ -29,6 +29,10 @@ public class OvercookedTrigger
             {
                 _equivitalService.StopDataCollection();
             }
+            else if (key == ConsoleKey.C)
+            {
+                _equivitalService.StartDongleManager();
+            }
 
         }
     }
