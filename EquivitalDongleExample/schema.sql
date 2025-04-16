@@ -8,7 +8,7 @@ CREATE TABLE rounds (
     round_id TEXT NOT NULL,
     start_time DOUBLE PRECISION NOT NULL,
     end_time DOUBLE PRECISION,
-    UNIQUE (player_id, uid)
+    UNIQUE (player_id, uid, round_id)
 );
 
 -- Table for ECG data

@@ -69,4 +69,38 @@ BEGIN
 END $$;
 
 
+-- ECG data foreign key
+ALTER TABLE ecg_data DROP CONSTRAINT IF EXISTS fk_round_ecg;
+
+-- Heart Rate data foreign key
+ALTER TABLE heart_rate_data DROP CONSTRAINT IF EXISTS fk_round_hr;
+
+-- Accelerometer data foreign key
+ALTER TABLE accelerometer_data DROP CONSTRAINT IF EXISTS fk_round_accel;
+
+-- Respiration Rate data foreign key
+ALTER TABLE respiration_rate_data DROP CONSTRAINT IF EXISTS fk_round_rr;
+
+-- Impedance Respiration data foreign key
+ALTER TABLE impedance_respiration_data DROP CONSTRAINT IF EXISTS fk_round_ir;
+
+-- Skin Temperature data foreign key
+ALTER TABLE skin_temperature_data DROP CONSTRAINT IF EXISTS fk_round_temp;
+
+-- GSR data foreign key
+ALTER TABLE gsr_data DROP CONSTRAINT IF EXISTS fk_round_gsr;
+
+-- EEG data foreign key
+ALTER TABLE eeg_data DROP CONSTRAINT IF EXISTS fk_round_eeg;
+
+-- EEG Metrics data foreign key
+ALTER TABLE metrics_data DROP CONSTRAINT IF EXISTS fk_round_metrics;
+
+-- Eye Tracker data foreign key
+ALTER TABLE eye_tracker_data DROP CONSTRAINT IF EXISTS fk_round_eye;
+
+-- Trajectories foreign key
+ALTER TABLE trajectories DROP CONSTRAINT IF EXISTS fk_round_trajectories;
+
+
 
