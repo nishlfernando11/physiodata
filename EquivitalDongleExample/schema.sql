@@ -3,12 +3,12 @@
 -- Table for rounds
 CREATE TABLE rounds (
     id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
     uid TEXT NOT NULL,
     player_id TEXT NOT NULL,
     round_id TEXT NOT NULL,
     start_time DOUBLE PRECISION NOT NULL,
-    end_time DOUBLE PRECISION,
-    UNIQUE (player_id, uid, round_id)
+    end_time DOUBLE PRECISION
 );
 
 -- Table for ECG data
@@ -187,6 +187,7 @@ CREATE INDEX idx_metrics_event_time ON metrics_data (event_time);
 
 CREATE TABLE records (
     id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
     uid INTEGER NOT NULL,               -- Assuming UID is auto-incrementing
     unix_timestamp DOUBLE PRECISION NOT NULL,     -- Timestamp representing Unix timestamp (will use TO_TIMESTAMP for conversion)
     round_id VARCHAR(255) NOT NULL,        -- Assuming round_id is a string-based identifier
@@ -248,13 +249,16 @@ CREATE INDEX idx_gsr_event_time ON gsr_data (event_time);
 
 --Keyboard events
 CREATE TABLE session (
+	id SERIAL NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
     hash_key TEXT PRIMARY KEY
 );
 
 CREATE TABLE keyboard_events (
     id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', NOW()),
     hash_key TEXT REFERENCES session(hash_key),
-    timestamp TIMESTAMP NOT NULL,
+    timestamp DOUBLE PRECISION NOT NULL,
     key TEXT NOT NULL,
     event_type TEXT NOT NULL
 );
