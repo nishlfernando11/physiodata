@@ -193,6 +193,7 @@ namespace ECGDataStream
 
         public void StartDataCollection(string roundID, string playerID, string uid)
         {
+            Console.WriteLine("_isCollecting ", _isCollecting);
             if (!_isCollecting)
             {
                 Console.WriteLine("Adding player round data");

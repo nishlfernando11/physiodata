@@ -46,7 +46,7 @@ public class DataService
                 Console.WriteLine("Connected to Overcooked Socket.IO server." + data);
             });
 
-            socket.On("start_ecg", (data) =>
+            socket.On("start_sensors", (data) =>
             {
                 Console.WriteLine("======Starting a new round ===============================");
                 // Parse incoming data as JObject
@@ -83,9 +83,9 @@ public class DataService
                 StartECGCollection(roundId, playerId, uid);
             });
 
-            socket.On("stop_ecg", (data) =>
+            socket.On("stop_sensors", (data) =>
             {
-                Console.WriteLine("Received stop_ecg event. Stopping ECG collection...");
+                Console.WriteLine("Received stop_sensors event. Stopping ECG collection...");
                 StopECGCollection();
             });
 
@@ -110,14 +110,14 @@ public class DataService
 
     //private void HandleTrigger(string eventData)
     //{
-    //    if (eventData.Contains("start_ecg") && !_isStreaming)
+    //    if (eventData.Contains("start_sensors") && !_isStreaming)
     //    {
-    //        Console.WriteLine("Received start_ecg. Beginning ECG data collection...");
+    //        Console.WriteLine("Received start_sensors. Beginning ECG data collection...");
     //        StartECGCollection(eventData);
     //    }
-    //    else if (eventData.Contains("stop_ecg") && _isStreaming)
+    //    else if (eventData.Contains("stop_sensors") && _isStreaming)
     //    {
-    //        Console.WriteLine("Received stop_ecg. Stopping ECG data collection...");
+    //        Console.WriteLine("Received stop_sensors. Stopping ECG data collection...");
     //        StopECGCollection();
     //    }
     //}
